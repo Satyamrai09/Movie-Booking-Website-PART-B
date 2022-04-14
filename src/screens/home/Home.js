@@ -63,7 +63,7 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <Header btnType="loginbutton" variant="contained" buttonName="LOGIN" btnType2="hiddenbutton" buttonName2="HIDDEN" btnType3="logoutbutton" buttonName3="LOGOUT"/>
+        <Header btnType="loginbutton" variant="contained" buttonName="Login" btnType2="hiddenbutton" buttonName2="HIDDEN" btnType3="logoutbutton" buttonName3="Logout"/>
         <span className="heading">Upcoming Movies</span>
         <SingleImageList moviesData={this.state.data} />
 
