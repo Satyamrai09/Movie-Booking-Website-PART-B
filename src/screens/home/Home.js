@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import "../../common/header/Header";
 import Header from "../../common/header/Header.js";
@@ -8,19 +8,19 @@ import RegularImageList from "../RegularImageList";
 import SimpleCard, { userSelection } from "../filters";
 import genres from "../genres";
 import artists from "../artists";
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
+function Home() {
 
-    this.state = {
-      data: moviesData,
-      genres: genres,
-      artists: artists,
-      userSelection: moviesData,
-    };
-  }
 
-  filterHandler = () => {
+  const [homeState, setHomeState] = useState({
+    data: moviesData,
+    genres: genres,
+    artists: artists,
+    userSelection: moviesData,
+  });
+    
+  const [movieState, setMovieState] = useState(moviesData);
+
+  var filterHandler = ()=> {
     if (
       userSelection.name === "" &&
       userSelection.releaseDateEnd === "" &&
@@ -28,14 +28,13 @@ class Home extends React.Component {
       userSelection.genres.length === 0 &&
       userSelection.artists.length === 0
     ) {
-      const state = this.state;
-      state.userSelection = moviesData;
-      this.setState(state);
+      const state = moviesData;
+      setMovieState(state);
       return moviesData;
     } 
     
     else {
-      const filteredMovies = this.state.data.filter((movie) => {
+      const filteredMovies = movieState.filter((movie) => {
         if (
           movie.title.toLowerCase() === userSelection.name.toLowerCase()||
           movie.genres.some((genre) => userSelection.genres.includes(genre)) ||parseInt(new Date(movie.release_date).getTime()) <=  parseInt(new Date(userSelection.releaseDateEnd).getTime())||
@@ -45,43 +44,40 @@ class Home extends React.Component {
             )
           )
         ) {
-          console.log(userSelection.releaseDateStart);
-          console.log(parseInt(new Date(movie.release_date).getTime()) >  parseInt(new Date(userSelection.releaseDateEnd).getTime()))
           return movie;
         }
         else
           return null;
       });
 
-      const state = this.state;
-      state.userSelection = filteredMovies;
-
-      this.setState(state);
+      
+      const filteredState = filteredMovies;
+      setMovieState(filteredState);
+      console.log(filteredState)
     }
   };
-
-  render() {
+ 
     return (
       <div>
         <Header btnType="loginbutton" variant="contained" buttonName="Login" btnType2="hiddenbutton" buttonName2="HIDDEN" btnType3="logoutbutton" buttonName3="Logout"/>
         <span className="heading">Upcoming Movies</span>
-        <SingleImageList moviesData={this.state.data} />
+        <SingleImageList moviesData={homeState.data} />
 
         <div className="flex-container">
           <div className="left">
-            <RegularImageList moviesData={this.state.userSelection} />
+            <RegularImageList moviesData={movieState} />
           </div>
           <div className="right">
             <SimpleCard
-              genres={this.state.genres}
-              artists={this.state.artists}
-              filterHandler={this.filterHandler}
+              genres={homeState.genres}
+              artists={homeState.artists}
+              filterHandler={filterHandler}
             />
           </div>
         </div>
       </div>
     );
   }
-}
+
 
 export default Home;
